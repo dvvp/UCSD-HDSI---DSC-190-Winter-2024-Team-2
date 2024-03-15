@@ -6,11 +6,14 @@
 1. Model working on a pre-recorded video ✅
 
 Original Video:
-<video src="P6010002.MOV" width="1920" height="1080" controls></video>
 
+[![DSC 190 - Original Video](https://img.youtube.com/vi/74YdnvhRzvM/0.jpg)](https://www.youtube.com/watch?v=74YdnvhRzvM)
 
 Processed Video:
-<video src="P6010002_Processed.mp4" width="640" height="400" controls></video>
+
+[![DSC 190 - Processed Video](https://img.youtube.com/vi/74YdnvhRzvM/0.jpg)](https://www.youtube.com/watch?v=74YdnvhRzvM)
+
+Do note the change in resolution from 1920x1080 to 640x600. This change made video processing a lot faster.
 
 ### Nice to have:
 1. Model working on a Jetson AGX ❌
