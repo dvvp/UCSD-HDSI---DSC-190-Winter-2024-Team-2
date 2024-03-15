@@ -13,13 +13,13 @@ Output Video 1 (Using 640x400p pre-processing, -15% and +15% brightness augmenta
 
 (Coming soon! If you are reading this, this video is still processing)
 
-Output Video 2 (Using -15% and +15% brightness augmentations in training data):
+Output Video 2 (Using -15% and +15% brightness augmentations in training data) <-- BEST MODEL:
 
 (Coming soon! If you are reading this, this video is still processing)
 
 Do note that we scaled our video down from 1920x1080p to 640x400p for faster processing on our CPU ([Intel Core i5-8250U](https://ark.intel.com/content/www/us/en/ark/products/124967/intel-core-i5-8250u-processor-6m-cache-up-to-3-40-ghz.html)). This also replicates the frames that our camera, the [Luxonis Oak-D LR](https://shop.luxonis.com/products/oak-d-lr), will process during the race.  
 
-We originally pre-processed our training data to 640x400p because we feared that the model would not be able to predict on frames of a different size. The more pixelated training images, however, caused us to make inaccurate predictions as seen from the occasional holes that would appear in "Processed Video 1".
+We originally pre-processed our training data to 640x400p because we feared that the model would not be able to predict on frames of a different size. The more pixelated training images, however, caused us to make inaccurate predictions as seen from the occasional artifacts that would appear in "Processed Video 1".
 
 In "Processed Video 2", we trained a new model with training data that kept its original source resolution, and this gave us more acceptable results.
 
@@ -41,7 +41,7 @@ Most of our failed attempts were from trying to use past repos that did lane det
 
 Something that we overlooked was that our model needed to differentiate between road and grass instead of lane and road; using the lane alone to detect edges was simply not reliable. 
 
-We immediately knew that we had to look into supervised learning models such as YOLOv9 since we had such a unique scenario in which the road we were detecting is neighbored by grass.
+We immediately knew that we had to look into supervised learning models such as [YOLOv9](https://github.com/WongKinYiu/yolov9) since we had such a unique scenario in which the road we were detecting is neighbored by grass.
 
 ### Working Attempts:
 
@@ -109,3 +109,4 @@ If we were to go back, we would have started our model using Roboflow because th
 
 ## Future Plans
 
+When we get back to work, we plan on working on Roboflow
