@@ -212,7 +212,7 @@ We originally pre-processed our training data to 640x400p because we feared that
 
 In "Processed Video 2", we trained a new model with training data that kept its original source resolution, and this gave us better results. However, we did notice that the model was unable to predict well on the corners. This means that we will need to collect more training data of the track's corners when we get to Purdue.
 
-Until we are able to get our model model working on a video the way Roboflow intends, we will continue process the video using this script to visually assess our model's accuracy.
+Until we are able to get our model working on a video the way Roboflow intends, we will continue process the video using this script to visually assess our model's accuracy.
 
 ## Data Science Involvement
 
