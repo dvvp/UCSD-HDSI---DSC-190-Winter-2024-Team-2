@@ -17,11 +17,11 @@ Original Video (1920x1080p, 30 FPS):
 
 Output Video 1 (Using 640x400p pre-processing, -15% and +15% brightness augmentations in training data):
 
-[![DSC 190 - Output Video 1](https://img.youtube.com/vi/74YdnvhRzvM/0.jpg)](https://youtu.be/jzMz9ItQHFY)
+[![DSC 190 - Output Video 1](https://img.youtube.com/vi/jzMz9ItQHFY/0.jpg)](https://youtu.be/jzMz9ItQHFY)
 
 Output Video 2 (Using -15% and +15% brightness augmentations in training data) <-- OUR BEST MODEL:
 
-[![DSC 190 - Output Video 2](https://img.youtube.com/vi/74YdnvhRzvM/0.jpg)](https://youtu.be/DIbjZlLFfbU)
+[![DSC 190 - Output Video 2](https://img.youtube.com/vi/DIbjZlLFfbU/0.jpg)](https://youtu.be/DIbjZlLFfbU)
 
 ## What We Did
 
