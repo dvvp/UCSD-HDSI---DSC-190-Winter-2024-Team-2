@@ -76,7 +76,8 @@ We experimented with various combinations of parameters for tuning the algorithm
 Testing on Purdue Track:
 ![proba_hough2_output](proba_hough2_output.png)
 
-While the performance on the example images provided in this repo is acceptable, it does not apply well to our own images. There isn't much room for fine-tuning in this code, so our options for improvement are limited. We believe that several factors may have contributed to the poor performance. 1. Image noise, shadows, reflections, and other artifacts can interfere with the detection process.
+While the performance on the example images provided in this repo is acceptable, it does not apply well to our own images. There isn't much room for fine-tuning in this code, so our options for improvement are limited. We believe that several factors may have contributed to the poor performance. 
+1. Image noise, shadows, reflections, and other artifacts can interfere with the detection process.
 2. The features that distinguish road from grass may not be as well-defined as those for lane markings.
 3. In this particular image, there is an arch bridge, and many other Purdue track images present challenging environments.
 
@@ -118,9 +119,10 @@ Testing on Purdue Track:
 ![opencv_edge_output2](opencv_edge_output3.png)
 
 Both were done to exclude the background some elements which were causing excessive edge detection. We focus specifically on the region where the road lanes are expected to be, ignoring irrelevant background elements. We also adjusted parameters for both accordingly. 
+
 Although there has been significant improvement, one issue is that we cannot find a specific way to define region of interest that can generalize across all Purdue track images.
 
-
+Because we were unable to get the model to work on OpenCV, we decided to give deep learning a try.
 
 #### Roboflow Inference on Jetson
 
