@@ -17,11 +17,11 @@ Original Video (1920x1080p, 30 FPS):
 
 Output Video 1 (Using 640x400p pre-processing, -15% and +15% brightness augmentations in training data):
 
-(Coming soon! If you are reading this, this video is still processing!)
+[![DSC 190 - Output Video 1](https://img.youtube.com/vi/74YdnvhRzvM/0.jpg)](https://youtu.be/jzMz9ItQHFY)
 
 Output Video 2 (Using -15% and +15% brightness augmentations in training data) <-- OUR BEST MODEL:
 
-(Coming soon! If you are reading this, this video is still processing!)
+[![DSC 190 - Output Video 2](https://img.youtube.com/vi/74YdnvhRzvM/0.jpg)](https://youtu.be/DIbjZlLFfbU)
 
 ## What We Did
 
@@ -33,11 +33,94 @@ During this quarter, we learned how to use an Oak-D camera, tinkered with comput
 
 Most of our failed attempts were from trying to use past repos that did lane detection. Most of these models used OpenCV methods which were interesting to read about, but took a lot of effort to tweak as most of the code available online were outdated, and/or had a lot of parameters that we did not know how to adjust.
 
-Something that we overlooked was that our model needed to differentiate between road and grass instead of lane and road. Most models online differentiated between lane and road instead of road and grass so that was another reason why we we were unable to find a repository that worked.  
+Something that we overlooked was that our model needed to differentiate between road and grass instead of lane and road. Most models online differentiated between lane and road instead of road and grass so that was another reason why we we were unable to find a repository that worked. 
 
-We later tried to make our own model using OpenCV, but it had poor results.
+Below are the OpenCV techniques that we tried and their results:
 
-Because of all the failed attempts with OpenCV, we decided to use Roboflow instead.
+**Proba_Hough1**: This script demonstrates a basic pipeline combining Edge Detection (Canny) and line detection (Probabilistic Hough Transform) techniques for lane detection in images.
+
+1. Convert uploaded Image to RGB
+
+2. Define Region of Interest - polygonal region where lanes are expected to appear
+
+3. Convert cropped Image to Grayscale
+
+5. Detect Lines Using Probabilistic Hough Transform - detect lines in the cropped image (this technique is used to identify straight lines in the image)
+
+6. Draw Lines on Image and Display
+
+Testing on Purdue Track:
+
+![proba_hough1_output](proba_hough1_output.png)
+
+We experimented with various combinations of parameters for tuning the algorithm, but none significantly improved its performance. The algorithm appears to identify cracks on the lane rather than lane edges.
+1. The Canny edge detection algorithm is tailored for detecting road edges, edges between road and grass may not exhibit the same level of contrast
+2. The region of interest defined here may not be suitable for Purdue track images.
+
+**Proba_Hough2**: The script implements a lane detection algorithm using Fourier Transform and Hough Transform techniques. Additionally, it addresses challenges such as color and exposure issues in input frames by employing a weighted average approach for curve fitting parameters.
+
+1. Gaussian Filter and Mask Generation -  creates a circular mask centered on the image by generating a 2D Gaussian filter kernel to focus processing on the area of interest
+
+2. Convert input image to grayscale
+
+3. Apply a threshold to create a binary image, highlighting regions of interest
+
+4. Apply Gaussian blur to the binary image to reduce noise and smoothen ed
+
+5. Perform Fourier Transform - to transform it into the frequency domain
+
+6. Applied Hough Transform (cv2.HoughLinesP) - to detect line segments in the transformed image
+
+7. Draw fitted lines on the input frame - detected line segments are categorized as left or right lanes based on their positions relative to the image center
+
+Testing on Purdue Track:
+![proba_hough2_output](proba_hough2_output.png)
+
+While the performance on the example images provided in this repo is acceptable, it does not apply well to our own images. There isn't much room for fine-tuning in this code, so our options for improvement are limited. We believe that several factors may have contributed to the poor performance. 1. Image noise, shadows, reflections, and other artifacts can interfere with the detection process.
+2. The features that distinguish road from grass may not be as well-defined as those for lane markings.
+3. In this particular image, there is an arch bridge, and many other Purdue track images present challenging environments.
+
+**Color_Thres2**: The repo we studied aims to leverage color information and contour analysis to identify sidewalk regions in images. But we made significant modifications to it and wrote an algorithm using SLIC Superpixel Segmentation, Color Analysis, and Color Comparison. 
+SLIC Superpixel Segmentation (Simple Linear Iterative Clustering) - employed to partition the input image into segments or superpixels based on color similarity and spatial proximity using skimage.segmentation.slic()
+Color Analysis - calculate the average color for each superpixel
+Color Comparison - the is_similar_to_green() function compares the average color of each superpixel to a predefined green color using Euclidean distance; if the calculated distance is below a certain threshold, the color is considered similar to green; of the color is similar to green, it labels the superpixel as green (1); otherwise, it labels it as grey (0).
+
+Testing on Purdue Track:
+![color_thres2_output](color_thres2_output.jpg)
+
+This code works well on some Purdue track images, but it has significant errors on most images. For example, as shown in the image. Another issue is that this algorithm takes approximately 3-5 seconds to process each image, so we cannot use it.
+
+**OpenCV_Edge**: This code snippet performs Canny edge detection followed by Hough line detection with OpenCV and Matplotlib. 
+
+1. Read and Convert Image from BGR format to grayscale
+
+2. Apply Gaussian Blur
+
+3. Canny Edge Detection - identifies edges in the image based on intensity gradients
+
+4. Apply Hough line detection (Probabilistic Hough Transform) - to detect straight lines in the edge-detected image
+
+5. Draw Detected Lines and Display image
+
+Testing on Purdue Track:
+![opencv_edge_output1](opencv_edge_output1.png)
+
+As shown above, many edges on the trees in the background are also detected, so we tried two modifications.
+
+1. Define rectangular region of interest (ROI) - cover and not consider the lower two-thirds of the image
+
+Testing on Purdue Track:
+![opencv_edge_output2](opencv_edge_output2.png)
+
+2. Define polygonal region of interest (ROI) - cover and not consider the specific polygon shape with defined vertices
+
+Testing on Purdue Track:
+![opencv_edge_output2](opencv_edge_output3.png)
+
+Both were done to exclude the background some elements which were causing excessive edge detection. We focus specifically on the region where the road lanes are expected to be, ignoring irrelevant background elements. We also adjusted parameters for both accordingly. 
+Although there has been significant improvement, one issue is that we cannot find a specific way to define region of interest that can generalize across all Purdue track images.
+
+
 
 #### Roboflow Inference on Jetson
 
@@ -87,7 +170,8 @@ docker stop PROCESS_NAME
 
 - How to copy files in Linux:
 
-open terminal and type in:
+Open terminal and type in:
+
 ```
 scp YOUR_IMAGE.jpg jetson@ucsd-agex-03:/home/jetson/
 ```
@@ -122,11 +206,11 @@ The script originally slowed down and stopped running after 1000 or so frames, b
 
 Do note that we scaled our video down from 1920x1080p to 640x400p for faster processing on our CPU ([Intel Core i5-8250U](https://ark.intel.com/content/www/us/en/ark/products/124967/intel-core-i5-8250u-processor-6m-cache-up-to-3-40-ghz.html)). This also replicates the frames that our camera, the [Luxonis Oak-D LR](https://shop.luxonis.com/products/oak-d-lr), will process during the race.  
 
-We originally pre-processed our training data to 640x400p because we feared that the model would not be able to predict on frames of a different size. The more pixelated training images, however, caused us to make inaccurate predictions as seen from the occasional artifacts that would appear in "Processed Video 1".
+We originally pre-processed our training data to 640x400p because we feared that the model would not be able to predict on frames of a different size. The more pixelated training images, however, caused us to make inaccurate predictions as can seen from the occasional artifacts that would appear in "Processed Video 1".
 
-In "Processed Video 2", we trained a new model with training data that kept its original source resolution, and this gave us better results.
+In "Processed Video 2", we trained a new model with training data that kept its original source resolution, and this gave us better results. However, we did notice that the model was unable to predict well on the corners. This means that we will need to collect more training data of the track's corners when we get to Purdue.
 
-As we get closer to getting the model working on a video the way Roboflow intends, we will process the video using this technique to visually assess model accuracy.
+Until we are able to get our model model working on a video the way Roboflow intends, we will continue process the video using this script to visually assess our model's accuracy.
 
 ## Data Science Involvement
 
@@ -168,21 +252,19 @@ We also learned a great deal about computer vision in the context of deep learni
 
 The only data analysis we did was assessing the quality of the data that we trained. Roboflow provided us an annotation heatmap which showed us how much we annotated our images. This heatmap acted as a good sanity check.
 
-![alt text](image.png)
+![heatmap](heatmap.png)
 
 ## Next Steps
 
 When we get back to work, we plan on using the Roboflow employee's suggestion on how to fix our error to hopefully get our model working on the Jetson. [Roboflow Inference](https://github.com/roboflow/inference) seems to be an entirely different library that we have not had the chance to look at yet. We then want to find a way to compute centroids (center of the lane) in order to create a path in which the autonomous car can follow. Sid has provided us a [Gitlab repo](https://gitlab.com/ucsd_robocar2/ucsd_robocar_lane_detection2_pkg) that contains information on how we can do this.
 
-We plan to try using this Inference library as soon as next week (3/18) and hopefully not have to use our custom video inference script.
-
 ## Lessons Learned
 
-If we were to start over, we would have started making our model using Roboflow because the framework made it really easy for us to annotate and infer on images. We initially thought that Roboflow was only for object detection, but we were wrong. I think we would have been much further ahead if we started with Roboflow instead of looking for existing repos using OpenCV. 
+If we were to start over, we would have started making our model using Roboflow because the framework made it really easy for us to annotate and infer on images. We initially thought that Roboflow was only for object detection, but we were wrong. We would have been much further ahead if we started with Roboflow instead of looking for existing repos that used OpenCV. 
 
 ## Future Work
 
-Some work someone could do after us would be to annotate more training data for our model. We do not recommend tweaking the OpenCV model as OpenCV is unable to detect edges such the dashed line indicating the entrance/exit to the pit. 
+Some work someone could do after us would be to annotate more training data for our model. We do not recommend tweaking the OpenCV model as it is difficult for OpenCV to be able to detect edges such the dashed line indicating the entrance/exit to the pit. 
 
 ## Notes
 
