@@ -11,6 +11,8 @@
 
 ### Media
 
+**Click the thumbanails to watch on YouTube**
+
 Original Video (1920x1080p, 30 FPS):
 
 [![DSC 190 - Original Video](https://img.youtube.com/vi/74YdnvhRzvM/0.jpg)](https://www.youtube.com/watch?v=74YdnvhRzvM)
@@ -270,7 +272,7 @@ Some work someone could do after us would be to annotate more training data for 
 
 ## Notes
 
-- For those who want to replicate our work, make sure to request for additional credits using a University email address
+- For those who want to replicate our work, make sure to request for additional credits on Roboflow using a University email address
 - NVIDIA Jetson deployment for Inference *server* and Hosted Inference *API* are two completely different things
 - We are leaving this here for our own future reference: https://github.com/roboflow/inference
 
