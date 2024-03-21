@@ -1,7 +1,10 @@
 # UCSD HDSI - DSC 190 Winter 2024, Team #2
 
-## Deliverables
+- [Lane Detection](#Lane-Detection)
+- [Obstacle Detection](#Obstacle-Detection)
 
+# Lane Detection:
+## Deliverables
 ### Must Have
 1. Model working on a pre-recorded video ✅
 
@@ -277,4 +280,158 @@ Some work someone could do after us would be to annotate more training data for 
 - We are leaving this here for our own future reference: https://github.com/roboflow/inference
 
 ## References
+
+<br>
+<br>
+
+# Obstacle Detection:
+
+## 📦 Deliverables
+
+### Must Have
+- [x] Obstacle detection model
+- [x] Validate OAKD-LR depth data
+- [x] Model running on LR
+- [x] Model running on LR via ROS DepthAI driver
+- [x] Obstacle detection up to 30m
+- [ ] Identify obstacle position relative to lane
+- [ ] Identify obstacles in a variety of conditions
+
+### Nice to Have
+
+- [x] Cone detection model
+- [x] Cow/people detection model
+- [x] Warehouse robot/people detection model
+- [ ] identify karts in a variety of conditions
+
+### Media:
+
+**Box Detection:**
+- [View on Roboflow](https://universe.roboflow.com/dsc-190-aks/aks-obstacle)
+
+![image](images/boxdetection.gif)
+
+**Warehouse Robot Detection:**
+- [View on Roboflow](https://universe.roboflow.com/dsc-190-aks/shelf-picker)
+
+![image](images/warehouse.gif)
+
+**Cow Detection:**
+- [View on Roboflow](https://universe.roboflow.com/dsc-190-aks/cow-detection-o920x)
+
+![image](images/cow.gif)
+
+**Kart Detection**
+- [View on Roboflow](https://universe.roboflow.com/dsc-190-aks/aks-kart-detection)
+- [Github Repo](https://github.com/autonomous-karting-series/GoKartSampleSet)
+
+![image](images/kart.jpg)
+
+
+## 👨‍💻 What I Did 
+My main accomplishment for DSC190 WI24 was learning the entire process of creating and running a YOLO detection model on Luxonis hardware. As part of this process, I leveraged platforms such as [roboflow](https://roboflow.com/) to annotate my images, [collab](https://colab.research.google.com/) & [vast.ai](https://vast.ai/) to train my YOLO models, and various cameras from the OAKD-Lite to the Long Range. It took many iterations of testing out different model parameters, version settings, and training data to reach where I am today with the different models I've created, and I plan on continuing to refine and build upon my work next quarter.
+
+### What Didn't Work
+
+#### YOLOv5
+Initially, I thought that the YOLOv5 models might provide inference speed improvements, however, it had no noticeable change compared to YOLOv8 and was slightly harder to train and test. My recommendation is to stick to YOLOv8.
+
+### Working Attempts
+
+#### YOLO v8 Obstacle Detection
+My current iteration of my obstacle detection model, `obstacle_v2_320` achieves detections up to 30m at 68% confidence, tested on a clear, sunny day on dark asphalt in [lot P781](https://www.google.com/maps/place/32%C2%B052'42.2%22N+117%C2%B013'07.8%22W/@32.8783811,-117.2194807,239m/data=!3m2!1e3!4b1!4m4!3m3!8m2!3d32.87838!4d-117.218837) *(Which is also where a majority of the train photos came from.)*
+
+
+| Distance (m) | Confidence % |
+| --- | --- |
+| 5 | 91 |
+| 10 | 84 |
+| 15 | 81 |
+| 20 | 78 |
+| 25 | 74 |
+| 30 | 68 |
+
+Training images were taken on both an iPhone 12 1x camera as well as with the OAKD-LR, and my dataset is currently at 418 images. When tested on device (no ROS) it runs at around 20 FPS, and with ROS the performance depends on whether or not we are pulling depth values, *(~20 FPS without depth vs ~10 FPS with depth)*.
+
+| ROS RGB-D | ROS RGB |
+| --- | --- |
+| ![image](images/rgbd_lr.png) | ![image](images/rgbd_lr.png) |
+
+#### SICK $10k Challenge
+![image](images/cow_pic.jpg)
+I was happy that I was able to contribute to Triton AI's entry in the SICK 10k challenge and apply what I had learned from obstacle detection to this effort. It was a ton of fun and rewarding to be able to test out my work in the field (pun intended). For the demo, I trained three new models in addition to my existing obstacle detection model: Cone Detection, Cow/People Detection, and Warehouse Robot/People Detection. Examples can be seen in the [media section](###Media:) above. 
+
+Cow detection and warehouse robot detection were trained from scratch and then merged with an existing [people detection](https://universe.roboflow.com/people20/people-dmb0u) model. Cone detection was trained using the existing [AKS Traffic Cone Dataset](https://universe.roboflow.com/cone-dataset-training/autonomous-karting-series-traffic-cone-image-dataset/health).
+
+
+#### Kart Detection Model
+Finally, I have a working kart detection model, however further development is paused until I receive more kart images from other schools. I also plan on collecting more training images with the UCSD kart the next time we take it outside.
+
+## 👨‍🔬 Data Science Involvement 
+
+### Data Collected
+Throughout this quarter, I collected images to train the various models. I took 290 Kart, 299 Cow, 547 Warehouse Robot, and 418 Obstacle photos, totaling over 1500 photos, each with their own respective annotations. Images were taken using an iPhone 12 pro and OAKD-LR camera, annotations were made using Roboflow.
+
+### Data Science Techniques
+
+#### Image Pre-Processing
+Before I trained a YOLO model, I applied various transformations to my dataset to boost the number of images and create a more robust model. These transformations included ±5° Horizontal/Vertical Shear, ±5% Brightness/Exposure, and ±5° rotation. These transformations allowed my model to adapt better to scenarios where these conditions could occur such as during kart acceleration/deceleration, different lighting conditions, and off-level camera mounting.
+
+#### Cross Validation
+My images were split into train, test, and validation sets to assess model performance and avoid overfitting.
+
+### Data Analysis
+
+#### Model Evaluation
+![image](images/obstacle_v2_320_metrics.png)
+As part of my model evaluation, I examined various features to determine my model's performance, mainly precision, recall, and cls loss. Above is an example from the latest version of my obstacle detection model.
+
+I also evaluated each iteration of my obstacle detection model in [lot P781](https://www.google.com/maps/place/32%C2%B052'42.2%22N+117%C2%B013'07.8%22W/@32.8783811,-117.2194807,239m/data=!3m2!1e3!4b1!4m4!3m3!8m2!3d32.87838!4d-117.218837) at intervals of 5m [(*view results*)](####YOLO-v8-Obstacle-Detection). This way I could see how my model's performance changed at each interval across different iterations. 
+
+
+
+## 📋 Next Steps
+
+### Model Improvements
+Both my obstacle detection and kart detection models are trained on relatively small datasets (418 & 290 images respectively). This causes my models to generalize poorly and only perform well in the same environments and conditions they were trained on. For example, this was noticeable during the obstacle detection demo - we needed to find dark enough asphalt for the model to perform well. To fix this, both models need additional training data from the following conditions:
+1. Hash lighting (direct sunlight, different shadows)
+2. Low Light (indoors, dimly lit places)
+3. Low Contrast (Lightly colored floors, concrete, deteriorated asphalt)
+4. High Contrast (Unusual shadows/patterns on the floor)
+
+The fastest way to collect a lot of this training data is to pull frames from videos taken on the LR or other cameras.
+
+### YOLOv9
+With the new support of YOLOv9 by Ultralytics (the Python package we use to train these YOLO models), it's only a matter of time before Luxonis provides hardware support as well. Some tests have shown that YOLOv9 uses 15% fewer parameters, 25% less compute, and 1.7% improvement in average precision compared to YOLOv8 on the same medium-sized dataset [(source)](https://docs.ultralytics.com/models/yolov9/#performance-on-ms-coco-dataset).
+
+
+If these numbers translate over to our dataset, switching our model to YOLOv9 could provide us with a sizeable efficiency and performance boost for free.
+
+
+## 🍎 Lessons Learned 
+- Check out this [YOLO Detection Guide](https://cloud-swordfish-3c8.notion.site/Object-Detection-0d8e28b57b9e4c5b8a0de89ef90a1c05?pvs=74) that I wrote 
+
+#### Collecting Data
+Data annotation was one pain point that I experienced during this project. It would take hours to label the hundreds of images I had collected, and although Roboflow provides an auto-labeler my account was out of credits. There are two solutions to this problem:
+1. Roboflow provides extra credits for students, these credits can be used for auto-labeling. Simply go to `Settings > Plan & Billing` to activate your account as a student.
+2. Annotate a smaller batch of images and train an initial model, then use that initial model to label the rest of your images 
+
+#### Training Speed
+As the size of my detection datasets increased, I found training time to be one bottleneck to my progress. Google Collab was a great resource for training smaller models, but when the size of the datasets reached the thousands, I would often hit the Google Collab usage limits for the day and lose all progress. 
+
+My friend recommended that I try out [vast.ai](https://vast.ai/), a cheap GPU rental service that allowed me access to RTX 4090's for around $0.40 an hour. Additionally, I figured out that setting `batch_size=-1` would allow me to automatically utilize the entire GPU's VRAM, speeding up training significantly.
+
+#### Running Yolo Model on Camera 
+My initial model worked on device with the OAKD Lite, however when moving up to the Pro Wide, and Long Range I ran into some camera-specific issues. With the Pro Wide, I was seeing FOV errors, and with the Long Range, I was seeing resolution errors, both of which could be attributed to different hardware specs of each camera. My fix was to use the [DepthAI Viewer](https://github.com/luxonis/depthai-viewer) which seems to have broader camera support and comes with a nice UI.
+
+#### Inference Speed
+My initial model was trained with an image size of 640x640. When running on camera, this was around 5 FPS, too slow to reliably detect obstacles at kart speed. Our solution was to retrain the model at an image size of 320x320, which provided us a 4x speed up to 20 FPS.
+
+## 🏎️ Future Work 
+If I had another week, I would collect much more obstacle training data in order to improve the general performance of my obstacle detection model in sub-optimal conditions, namely:
+- Hash sunlight
+- Low-light conditions
+- Indoors
+- High Contrast shadows
+- Non-asphalt surfaces
 
