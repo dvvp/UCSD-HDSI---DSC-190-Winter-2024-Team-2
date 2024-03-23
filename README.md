@@ -1,9 +1,13 @@
 # UCSD HDSI - DSC 190 Winter 2024, Team #2
 
+![HDSI Logo](UCSanDiego_Halicioglu_BlueGold.png)
+
 - [Lane Detection](#Lane-Detection)
 - [Obstacle Detection](#Obstacle-Detection)
 
 # Lane Detection:
+## Team Member(s)
+Devin Pham, Grace Chen
 ## Deliverables
 ### Must Have
 1. Model working on a pre-recorded video ✅
@@ -12,9 +16,9 @@
 1. Model working on a Jetson AGX ❌
 2. Model working on an Oak-D camera ❌
 
-### Media
+### Demonstration
 
-**Click the thumbanails to watch on YouTube**
+**Click the following thumbnails to watch on YouTube**
 
 Original Video (1920x1080p, 30 FPS):
 
@@ -257,7 +261,7 @@ We also learned a great deal about computer vision in the context of deep learni
 
 ### Data Analysis
 
-The only data analysis we did was assessing the quality of the data that we trained. Roboflow provided us an annotation heatmap which showed us how much we annotated our images. This heatmap acted as a good sanity check.
+We used deep learning and machine learning to create our models. Part of the process was assessing the quality of the data that we trained. Roboflow provided us an annotation heatmap which showed us how much we annotated our images which acted as a good sanity check.
 
 ![heatmap](heatmap.png)
 
@@ -273,18 +277,13 @@ If we were to start over, we would have started making our model using Roboflow 
 
 Some work someone could do after us would be to annotate more training data for our model. We do not recommend tweaking the OpenCV model as it is difficult for OpenCV to be able to detect edges such the dashed line indicating the entrance/exit to the pit. 
 
-## Notes
-
-- For those who want to replicate our work, make sure to request for additional credits on Roboflow using a University email address
-- NVIDIA Jetson deployment for Inference *server* and Hosted Inference *API* are two completely different things
-- We are leaving this here for our own future reference: https://github.com/roboflow/inference
-
-## References
-
 <br>
 <br>
 
 # Obstacle Detection:
+
+## Team Member(s)
+Matthew Holland
 
 ## 📦 Deliverables
 
@@ -304,7 +303,7 @@ Some work someone could do after us would be to annotate more training data for 
 - [x] Warehouse robot/people detection model
 - [ ] identify karts in a variety of conditions
 
-### Media:
+### Demonstration:
 
 **Box Detection:**
 - [View on Roboflow](https://universe.roboflow.com/dsc-190-aks/aks-obstacle)
