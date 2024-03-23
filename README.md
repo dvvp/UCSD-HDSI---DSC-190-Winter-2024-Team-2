@@ -201,7 +201,7 @@ We do not think we can get a working model using OpenCV because of our lack of k
 
 We found success in running our model on a video using Roboflow framework. 
 
-We annotated 1000+ training images with the help of someone from the Art Stack team using the following instructions:
+We annotated 1000+ training images with the help of Bonnie from the Art Stack team using the following instructions:
 
 1. Click the road directly in the front using the smart polygon tool
 2. If the white lanes nearby does not select, continue clicking on the bordering white lines to capture it. we want it as close to the grass as possible
